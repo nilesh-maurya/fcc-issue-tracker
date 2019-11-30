@@ -18,22 +18,22 @@ suite('Functional Tests', function() {
     suite('POST /api/issues/{project} => object with issue data', function() {
       
       test('Every field filled in', function(done) {
-       chai.request(server)
-        .post('/api/issues/test')
-        .send({
-          issue_title: 'Title',
-          issue_text: 'text',
-          created_by: 'Functional Test - Every field filled in',
-          assigned_to: 'Chai and Mocha',
-          status_text: 'In QA'
-        })
-        .end(function(err, res){
-          assert.equal(res.status, 200);
+       // chai.request(server)
+       //  .post('/api/issues/test')
+       //  .send({
+       //    issue_title: 'Title',
+       //    issue_text: 'text',
+       //    created_by: 'Functional Test - Every field filled in',
+       //    assigned_to: 'Chai and Mocha',
+       //    status_text: 'In QA'
+       //  })
+       //  .end(function(err, res){
+          // assert.equal(res.status, 200);
           
           //fill me in too!
           
-          done();
-        });
+          //done();
+        // });
       });
       
       test('Required fields filled in', function(done) {

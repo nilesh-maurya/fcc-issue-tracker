@@ -37,14 +37,16 @@
             crossorigin="anonymous"></script>
     <script>
       $(function() {
-        var currentProject = window.location.pathname.replace(/\//g, "");;
-        var url = "/api/issues/"+currentProject;
+        var currentProject = window.location.pathname.replace(/\//g, "");
+        var queryParameter = window.location.search;
+        var url = "/api/issues/"+currentProject+queryParameter;
         $('#projectTitle').text('All issues for: '+currentProject)
         $.ajax({
           type: "GET",
           url: url,
           success: function(data)
           {
+            console.log(data);
             var issues= [];
             data.forEach(function(ele) {
               console.log(ele);
