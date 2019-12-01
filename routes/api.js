@@ -12,7 +12,7 @@ var expect = require('chai').expect;
 var MongoClient = require('mongodb');
 var ObjectId = require('mongodb').ObjectID;
 
-const CONNECTION_STRING = process.env.DB; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
+const CONNECTION_STRING = process.env.DB; 
 
 let connection;
 
@@ -45,9 +45,8 @@ module.exports = function (app) {
       connectToDb().then(client => {
         const db = client.db();
         console.log('connected to db');
-        db.collection('issue').find(query).toArray((err, doc) => {
-            console.log(doc);
-            res.json(doc);
+        db.collection('issue').find(query).toArray().then((doc) => {
+            res.send(doc);
         });
       }).catch(next);
       
@@ -67,17 +66,17 @@ module.exports = function (app) {
         updated_on:  new Date(),
         open: true
       };
+    
       if(!issue.issue_title || !issue.issue_text || !issue.created_by || !issue.project){
         return res.send("Missing Inputs");
       }
-      console.log(issue);
+    
       connectToDb().then( client => {
         const db = client.db();
         console.log('connected to db');
         db.collection('issue').insertOne(issue)
           .then(issue => {
             const { project , ...doc} = issue.ops[0];
-            console.log(project,doc);
             res.json(doc);
           })
           .catch(err => { console.log(err); });
@@ -86,7 +85,7 @@ module.exports = function (app) {
     
     .put(function (req, res){
       var project = req.params.project;
-      if(!req.body){
+      if(Object.keys(req.body).length === 0){
         return res.send("no updated field sent");
       }
       const {_id, ...fields} = req.body;
@@ -99,12 +98,11 @@ module.exports = function (app) {
           updatedField[field] = fields[field];
         }
       });
-      console.log(updatedField);
+    
       connectToDb().then(client => {
         const db = client.db();
         db.collection('issue').findOneAndUpdate({_id: ObjectId(_id)}, {$set: {...updatedField, updated_on: new Date()}}, {upsert: true, returnNewDocument: true})
           .then(doc=>{
-            console.log(doc);
             res.send("successfully updated");
         }).catch(err=>{
             res.send("could not update "+ _id);
